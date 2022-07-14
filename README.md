@@ -10,7 +10,7 @@ This repo provides a multitenant capable GitOps workflow structure that can be f
 # Getting Started
 Run:
 ```
-./deploy.sh           # deploys on mgmt, cluster1, cluster2
+./deploy.sh           # deploys on mgmt cluster
 ```
 
 Note:
