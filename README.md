@@ -7,6 +7,9 @@ This repo provides a multitenant capable GitOps workflow structure that can be f
 - 1 Kubernetes Cluster
     - This demo has been tested on 1x `n2-standard-4` (gke), `m5.xlarge` (aws), or `Standard_DS3_v2` (azure) instance for `mgmt` cluster
 
+# High Level Architecture
+![High Level Architecture](images/aoa-1a.png)
+
 # Getting Started
 Run:
 ```
