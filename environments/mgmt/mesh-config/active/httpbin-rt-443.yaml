@@ -27,3 +27,5 @@ spec:
             namespace: httpbin
           port:
             number: 8000
+      labels:
+        waf: "true"

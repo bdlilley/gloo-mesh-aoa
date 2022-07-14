@@ -18,9 +18,11 @@ gloo mesh on port 443
 httpbin on 80 at /get
 - this route is rate limited at 20 req/sec
 - when you are rate limited, the transformationfilter provides a pretty message
+- log4j WAF policy enabled on this route
 
 httpbin on 443 at /get
 - this route has no limits
+- log4j WAF policy enabled on this route
 
 grafana on port 443 at /grafana
 
