@@ -15,9 +15,6 @@ images:
   newName: ghcr.io/argoproj/argocd
   newTag: 2.4.0-a8e6e40a
   
-  #fails
-  #newTag: 2.3.0-f0b51daf
-
 #images:
 #- name: quay.io/argoproj/argocd
 #  newTag: v2.4.0-rc1
