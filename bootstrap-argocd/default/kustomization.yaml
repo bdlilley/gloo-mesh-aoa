@@ -9,16 +9,16 @@ components:
 - github.com/argoproj-labs/argocd-extensions/manifests/?ref=main
 
 namespace: argocd
-
+  
 images:
 - name: quay.io/argoproj/argocd
-  newName: ghcr.io/argoproj/argocd
-  newTag: 2.4.0-99a889cd
-  
+  newTag: v2.4.6
+  digest: sha256:a0a6f3974427c826140b020a483181626e1dcf7280ae6eae2bce48e1a13e7577
+
 #images:
 #- name: quay.io/argoproj/argocd
-#  newTag: v2.4.0-rc1
-#  digest: sha256:92ea7377a66fa3e79dd1d7c804307a8b8829049fcf30df3884be764945d8ce7e
+#  newName: ghcr.io/argoproj/argocd
+#  newTag: 2.4.0-99a889cd
 
 patchesJson6902:
 - path: overlays/application-controller-status-processors.yaml
