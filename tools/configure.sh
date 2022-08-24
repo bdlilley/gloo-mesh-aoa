@@ -1,13 +1,10 @@
 #!/bin/bash
 #set -e
 
-# comma separated list
-cluster_contexts="mgmt"
+# number of app waves in the environments directory
+environment_waves="3"
 
-# sed commands to replace target_branch variable
-for i in $(echo ${cluster_contexts} | sed "s/,/ /g"); do
-  kubectl apply -f ../platform-owners/$i/$i-apps.yaml --context $i
-  kubectl apply -f ../platform-owners/$i/$i-cluster-config.yaml --context $i
-  kubectl apply -f ../platform-owners/$i/$i-infra.yaml --context $i
-  kubectl apply -f ../platform-owners/$i/$i-mesh-config.yaml --context $i
+# configure
+for i in $(seq ${environment_waves}); do 
+  kubectl apply -f environment/wave-${i}/wave-${i}-aoa.yaml;
 done
