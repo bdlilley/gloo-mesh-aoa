@@ -62,10 +62,9 @@ cd ..
 
 # deploy app of app waves
 for i in $(seq ${environment_waves}); do 
-  #echo $i;
   kubectl apply -f environment/wave-${i}/wave-${i}-aoa.yaml --context ${cluster_context};
-  #TODO: add test script if statement
-  sleep 20; 
+  # run test script
+  ./environment/wave-${i}/test.sh 
 done
 
 # wait for completion of gloo-mesh install
