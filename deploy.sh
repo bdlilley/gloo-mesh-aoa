@@ -29,6 +29,7 @@ cd ..
 
 # deploy app of app waves
 for i in $(seq $(ls environment | wc -l)); do 
+  echo "starting wave-${i}"
   # run init script if it exists
   [[ -f "environment/wave-${i}/init.sh" ]] && ./environment/wave-${i}/init.sh
   # deploy aoa wave
@@ -36,4 +37,6 @@ for i in $(seq $(ls environment | wc -l)); do
   # run test script if it exists
   [[ -f "environment/wave-${i}/test.sh" ]] && ./environment/wave-${i}/test.sh
 done
+
+echo "END."
 

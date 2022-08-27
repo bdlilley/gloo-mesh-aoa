@@ -1,5 +1,4 @@
 #!/bin/bash
 
-echo "starting wave-7"
-echo "wave-7 description:"
+echo "wave description:"
 echo "gloo-mesh-config"
