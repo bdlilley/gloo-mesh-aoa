@@ -4,7 +4,7 @@ apiVersion: apiextensions.k8s.io/v1
 kind: CustomResourceDefinition
 metadata:
   annotations:
-    crd.solo.io/specHash: 8803e768d4f2a3ce
+    crd.solo.io/specHash: 4f6b3bc7f92b4b38
     crd.solo.io/version: 2.1.0
   labels:
     app: gloo-mesh-apis
@@ -235,16 +235,16 @@ spec:
                       properties:
                         cluster:
                           description: the cluster of the object. if the field is
-                            omitted, Gloo Mesh will attempt to use the same cluster
-                            as the parent object containing this reference.
+                            omitted, Gloo Mesh will use the same cluster as the parent
+                            object containing this reference.
                           type: string
                         name:
                           description: the name of the object
                           type: string
                         namespace:
                           description: the namespace of the object. if the field is
-                            omitted, Gloo Mesh will attempt to use the same namespace
-                            as the parent object containing this reference.
+                            omitted, Gloo Mesh will use the same namespace as the
+                            parent object containing this reference.
                           type: string
                       type: object
                     subset:
@@ -320,7 +320,7 @@ apiVersion: apiextensions.k8s.io/v1
 kind: CustomResourceDefinition
 metadata:
   annotations:
-    crd.solo.io/specHash: 97fe764da4dd226
+    crd.solo.io/specHash: 6a040cb0079ffb7f
     crd.solo.io/version: 2.1.0
   labels:
     app: gloo-mesh-apis
@@ -518,16 +518,16 @@ spec:
                       properties:
                         cluster:
                           description: the cluster of the object. if the field is
-                            omitted, Gloo Mesh will attempt to use the same cluster
-                            as the parent object containing this reference.
+                            omitted, Gloo Mesh will use the same cluster as the parent
+                            object containing this reference.
                           type: string
                         name:
                           description: the name of the object
                           type: string
                         namespace:
                           description: the namespace of the object. if the field is
-                            omitted, Gloo Mesh will attempt to use the same namespace
-                            as the parent object containing this reference.
+                            omitted, Gloo Mesh will use the same namespace as the
+                            parent object containing this reference.
                           type: string
                       type: object
                     subset:
@@ -603,7 +603,7 @@ apiVersion: apiextensions.k8s.io/v1
 kind: CustomResourceDefinition
 metadata:
   annotations:
-    crd.solo.io/specHash: f408eff94a2fe46c
+    crd.solo.io/specHash: 7058ef4024238423
     crd.solo.io/version: 2.1.0
   labels:
     app: gloo-mesh-apis
@@ -835,16 +835,16 @@ spec:
                       properties:
                         cluster:
                           description: the cluster of the object. if the field is
-                            omitted, Gloo Mesh will attempt to use the same cluster
-                            as the parent object containing this reference.
+                            omitted, Gloo Mesh will use the same cluster as the parent
+                            object containing this reference.
                           type: string
                         name:
                           description: the name of the object
                           type: string
                         namespace:
                           description: the namespace of the object. if the field is
-                            omitted, Gloo Mesh will attempt to use the same namespace
-                            as the parent object containing this reference.
+                            omitted, Gloo Mesh will use the same namespace as the
+                            parent object containing this reference.
                           type: string
                       type: object
                   type: object
@@ -906,7 +906,7 @@ apiVersion: apiextensions.k8s.io/v1
 kind: CustomResourceDefinition
 metadata:
   annotations:
-    crd.solo.io/specHash: 58353ff37fbd3004
+    crd.solo.io/specHash: f491c82e3369b1df
     crd.solo.io/version: 2.1.0
   labels:
     app: gloo-mesh-apis
@@ -1144,18 +1144,310 @@ spec:
                       properties:
                         cluster:
                           description: the cluster of the object. if the field is
-                            omitted, Gloo Mesh will attempt to use the same cluster
-                            as the parent object containing this reference.
+                            omitted, Gloo Mesh will use the same cluster as the parent
+                            object containing this reference.
                           type: string
                         name:
                           description: the name of the object
                           type: string
                         namespace:
                           description: the namespace of the object. if the field is
-                            omitted, Gloo Mesh will attempt to use the same namespace
-                            as the parent object containing this reference.
+                            omitted, Gloo Mesh will use the same namespace as the
+                            parent object containing this reference.
                           type: string
                       type: object
+                  type: object
+                type: array
+              workspaces:
+                additionalProperties:
+                  properties:
+                    clusters:
+                      additionalProperties:
+                        properties:
+                          generic:
+                            properties:
+                              message:
+                                description: Additional information about the current
+                                  state of the resource.
+                                type: string
+                              observedGeneration:
+                                description: |-
+                                  The most recent generation observed in the the object's metadata.
+                                  If the `observedGeneration` does not match `metadata.generation`, Gloo Mesh
+                                  has not processed the most recent version of this object.
+                                format: int64
+                                type: integer
+                              state:
+                                description: |-
+                                  Whether the resource has been accepted as valid and processed in the Gloo
+                                  Mesh config translation.
+                                enum:
+                                - PENDING
+                                - ACCEPTED
+                                - INVALID
+                                - WARNING
+                                - FAILED
+                                - UNLICENSED
+                                type: string
+                              updatedAt:
+                                description: The last time the status was updated.
+                                format: date-time
+                                type: string
+                            type: object
+                        type: object
+                      description: |-
+                        The status of the resource in each cluster within the
+                        workspace.
+                      type: object
+                  type: object
+                description: The status of the resource in each workspace that it
+                  exists in.
+                type: object
+            type: object
+        type: object
+    served: true
+    storage: true
+    subresources:
+      status: {}
+
+---
+apiVersion: apiextensions.k8s.io/v1
+kind: CustomResourceDefinition
+metadata:
+  annotations:
+    crd.solo.io/specHash: 85fae56945893ce0
+    crd.solo.io/version: 2.1.0
+  labels:
+    app: gloo-mesh-apis
+    app.kubernetes.io/name: gloo-mesh-apis
+  name: connectionpolicies.resilience.policy.gloo.solo.io
+spec:
+  group: resilience.policy.gloo.solo.io
+  names:
+    categories:
+    - solo-io
+    kind: ConnectionPolicy
+    listKind: ConnectionPolicyList
+    plural: connectionpolicies
+    shortNames:
+    - cp
+    singular: connectionpolicy
+  scope: Namespaced
+  versions:
+  - name: v2
+    schema:
+      openAPIV3Schema:
+        properties:
+          spec:
+            description: ConnectionPolicy provides settings to apply low-level settings
+              on selected TCP connections.
+            properties:
+              applyToDestinations:
+                description: |-
+                  select the destinations where the policy will be applied. If left empty,
+                  this will apply to all destinations in the workspace.
+                items:
+                  properties:
+                    kind:
+                      description: the kind of destination being selected. defaults
+                        to Kubernetes Service.
+                      enum:
+                      - SERVICE
+                      - VIRTUAL_DESTINATION
+                      - EXTERNAL_SERVICE
+                      type: string
+                    port:
+                      description: |-
+                        the port on the Destination which receives traffic.
+                        Not required if the Destination only exposes a single port.
+                      oneOf:
+                      - not:
+                          anyOf:
+                          - required:
+                            - number
+                          - required:
+                            - name
+                      - required:
+                        - number
+                      - required:
+                        - name
+                      properties:
+                        name:
+                          description: the name of the port on the destination objects
+                            being targeted.
+                          type: string
+                        number:
+                          description: the number of the port on the destination objects
+                            being targeted.
+                          maximum: 4294967295
+                          minimum: 0
+                          type: integer
+                      type: object
+                    selector:
+                      description: selector used to match destination objects by their
+                        metadata
+                      properties:
+                        cluster:
+                          description: |-
+                            Only select objects in the matching cluster. If the field is omitted, Gloo Mesh will select
+                            matching objects across all clusters available in the parent object's workspace.
+                          type: string
+                        labels:
+                          additionalProperties:
+                            type: string
+                          description: labels matching those of the object
+                          type: object
+                        name:
+                          description: |-
+                            Only select objects with the matching name. If the field is omitted, Gloo Mesh will select
+                            matching objects with any name available in the parent object's workspace.
+                          type: string
+                        namespace:
+                          description: |-
+                            Only select objects in the matching namespace. If the field is omitted, Gloo Mesh will select
+                            matching objects across all namespaces available in the parent object's workspace.
+                          type: string
+                        workspace:
+                          description: |-
+                            Only select objects in the given workspace. If the field is omitted, Gloo Mesh will select
+                            matching objects across all workspaces available in the parent object's workspace.
+                          type: string
+                      type: object
+                  type: object
+                type: array
+              config:
+                description: The details of the low-level network connection settings
+                  to apply to the destinations.
+                properties:
+                  tcp:
+                    description: The low-level TCP connection settings to apply to
+                      the destinations selected.
+                    properties:
+                      connectTimeout:
+                        description: Sets the TCP connection timeout. It must be greater
+                          than or equal to 1ms.
+                        type: string
+                      maxConnections:
+                        description: Sets the maximum allowed connections to the destination
+                          host.
+                        format: int32
+                        type: integer
+                      tcpKeepalive:
+                        description: Sets the TCP keep-alive settings to apply to
+                          selected destinations.
+                        properties:
+                          interval:
+                            description: |-
+                              The time duration between keep-alive probes.
+                              Format examples: `1h`/`1m`/`1s`/`1ms`
+                            type: string
+                          probes:
+                            description: Maximum number of TCP keepalive probes to
+                              send before determining that connection is dead.
+                            maximum: 4294967295
+                            minimum: 0
+                            type: integer
+                          time:
+                            description: |-
+                              The time duration a connection needs to be idle before keep-alive probes start being sent.
+                              Format examples: `1h`/`1m`/`1s`/`1ms`.
+                            type: string
+                        type: object
+                    type: object
+                type: object
+            type: object
+          status:
+            description: Reflects the status of the ConnectionPolicy.
+            properties:
+              global:
+                properties:
+                  message:
+                    description: |-
+                      Additional information about the current state of the resource across all
+                      workspace clusters.
+                    type: string
+                  state:
+                    description: |-
+                      Whether the resource has been accepted as valid and processed in workspace
+                      clusters that it exists in.
+                    enum:
+                    - PENDING
+                    - ACCEPTED
+                    - INVALID
+                    - WARNING
+                    - FAILED
+                    - UNLICENSED
+                    type: string
+                type: object
+              selectedDestiantionPorts:
+                description: Destination ports selected by the policy
+                items:
+                  properties:
+                    kind:
+                      description: the kind of destination being selected. defaults
+                        to Kubernetes Service.
+                      enum:
+                      - SERVICE
+                      - VIRTUAL_DESTINATION
+                      - EXTERNAL_SERVICE
+                      type: string
+                    port:
+                      description: the port on the destination object being targeted.
+                        required if the object provides more than one port.
+                      oneOf:
+                      - not:
+                          anyOf:
+                          - required:
+                            - number
+                          - required:
+                            - name
+                      - required:
+                        - number
+                      - required:
+                        - name
+                      properties:
+                        name:
+                          description: the name of the port on the destination objects
+                            being targeted.
+                          type: string
+                        number:
+                          description: the number of the port on the destination objects
+                            being targeted.
+                          maximum: 4294967295
+                          minimum: 0
+                          type: integer
+                      type: object
+                    ref:
+                      description: reference to the destination object by its metadata
+                      properties:
+                        cluster:
+                          description: the cluster of the object. if the field is
+                            omitted, Gloo Mesh will use the same cluster as the parent
+                            object containing this reference.
+                          type: string
+                        name:
+                          description: the name of the object
+                          type: string
+                        namespace:
+                          description: the namespace of the object. if the field is
+                            omitted, Gloo Mesh will use the same namespace as the
+                            parent object containing this reference.
+                          type: string
+                      type: object
+                    subset:
+                      additionalProperties:
+                        type: string
+                      description: select a subset of the destination's endpoints
+                        for routing based on their labels.
+                      type: object
+                    weight:
+                      description: |-
+                        Specify the proportion of traffic to be forwarded to this destination.
+                        Weights across all of the `destinations` must sum to 100.
+                        Weight is only relevant when used in the context of a route with multiple destinations.
+                      maximum: 4294967295
+                      minimum: 0
+                      type: integer
                   type: object
                 type: array
               workspaces:

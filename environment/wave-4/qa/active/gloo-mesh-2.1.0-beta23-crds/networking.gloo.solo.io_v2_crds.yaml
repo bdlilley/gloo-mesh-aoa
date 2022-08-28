@@ -4,7 +4,7 @@ apiVersion: apiextensions.k8s.io/v1
 kind: CustomResourceDefinition
 metadata:
   annotations:
-    crd.solo.io/specHash: 6477cc1f654a5070
+    crd.solo.io/specHash: bf20723c851ffb36
     crd.solo.io/version: 2.1.0
   labels:
     app: gloo-mesh-apis
@@ -162,16 +162,16 @@ spec:
                             properties:
                               cluster:
                                 description: the cluster of the object. if the field
-                                  is omitted, Gloo Mesh will attempt to use the same
-                                  cluster as the parent object containing this reference.
+                                  is omitted, Gloo Mesh will use the same cluster
+                                  as the parent object containing this reference.
                                 type: string
                               name:
                                 description: the name of the object
                                 type: string
                               namespace:
                                 description: the namespace of the object. if the field
-                                  is omitted, Gloo Mesh will attempt to use the same
-                                  namespace as the parent object containing this reference.
+                                  is omitted, Gloo Mesh will use the same namespace
+                                  as the parent object containing this reference.
                                 type: string
                             type: object
                         type: object
@@ -214,16 +214,16 @@ spec:
                   properties:
                     cluster:
                       description: the cluster of the object. if the field is omitted,
-                        Gloo Mesh will attempt to use the same cluster as the parent
-                        object containing this reference.
+                        Gloo Mesh will use the same cluster as the parent object containing
+                        this reference.
                       type: string
                     name:
                       description: the name of the object
                       type: string
                     namespace:
                       description: the namespace of the object. if the field is omitted,
-                        Gloo Mesh will attempt to use the same namespace as the parent
-                        object containing this reference.
+                        Gloo Mesh will use the same namespace as the parent object
+                        containing this reference.
                       type: string
                   type: object
                 type: array
@@ -456,7 +456,7 @@ apiVersion: apiextensions.k8s.io/v1
 kind: CustomResourceDefinition
 metadata:
   annotations:
-    crd.solo.io/specHash: b58a25ff22477d26
+    crd.solo.io/specHash: 530c32fd8b1c9f47
     crd.solo.io/version: 2.1.0
   labels:
     app: gloo-mesh-apis
@@ -591,16 +591,16 @@ spec:
                     properties:
                       cluster:
                         description: the cluster of the object. if the field is omitted,
-                          Gloo Mesh will attempt to use the same cluster as the parent
-                          object containing this reference.
+                          Gloo Mesh will use the same cluster as the parent object
+                          containing this reference.
                         type: string
                       name:
                         description: the name of the object
                         type: string
                       namespace:
                         description: the namespace of the object. if the field is
-                          omitted, Gloo Mesh will attempt to use the same namespace
-                          as the parent object containing this reference.
+                          omitted, Gloo Mesh will use the same namespace as the parent
+                          object containing this reference.
                         type: string
                     type: object
                   subset:
@@ -667,11 +667,11 @@ spec:
                                           - required:
                                             - server
                                           - required:
-                                            - resolverMapRefs
+                                            - local
                                       - required:
                                         - server
                                       - required:
-                                        - resolverMapRefs
+                                        - local
                                   required:
                                   - executableSchema
                             - required:
@@ -684,11 +684,11 @@ spec:
                                       - required:
                                         - server
                                       - required:
-                                        - resolverMapRefs
+                                        - local
                                   - required:
                                     - server
                                   - required:
-                                    - resolverMapRefs
+                                    - local
                               required:
                               - executableSchema
                         required:
@@ -725,11 +725,11 @@ spec:
                                       - required:
                                         - server
                                       - required:
-                                        - resolverMapRefs
+                                        - local
                                   - required:
                                     - server
                                   - required:
-                                    - resolverMapRefs
+                                    - local
                               required:
                               - executableSchema
                         - required:
@@ -742,11 +742,11 @@ spec:
                                   - required:
                                     - server
                                   - required:
-                                    - resolverMapRefs
+                                    - local
                               - required:
                                 - server
                               - required:
-                                - resolverMapRefs
+                                - local
                           required:
                           - executableSchema
                     required:
@@ -867,18 +867,18 @@ spec:
                                 properties:
                                   cluster:
                                     description: the cluster of the object. if the
-                                      field is omitted, Gloo Mesh will attempt to
-                                      use the same cluster as the parent object containing
-                                      this reference.
+                                      field is omitted, Gloo Mesh will use the same
+                                      cluster as the parent object containing this
+                                      reference.
                                     type: string
                                   name:
                                     description: the name of the object
                                     type: string
                                   namespace:
                                     description: the namespace of the object. if the
-                                      field is omitted, Gloo Mesh will attempt to
-                                      use the same namespace as the parent object
-                                      containing this reference.
+                                      field is omitted, Gloo Mesh will use the same
+                                      namespace as the parent object containing this
+                                      reference.
                                     type: string
                                 type: object
                               subset:
@@ -921,7 +921,7 @@ spec:
                             whether that is locally executed (using resolvers and Envoy as the GraphQL engine)
                             or remotely executed (using a remote GraphQL server for the execution).
                           properties:
-                            resolverMapRefs:
+                            local:
                               description: |-
                                 List of references to GraphQLResolverMap resources. GraphQLResolverMaps
                                 contain a mapping from GraphQL fields to resolver configuration, so that those fields can be resolved
@@ -929,7 +929,67 @@ spec:
                                 Order of the references listed below does matter as resolver maps listed first
                                 will be given priority over later ones when tie-breaking field resolver configurations.
                               properties:
-                                refs:
+                                options:
+                                  properties:
+                                    enableIntrospection:
+                                      description: |-
+                                        Do we enable introspection for the schema? general recommendation is to
+                                        disable this for production and hence it defaults to false.
+                                      type: boolean
+                                    maxDepth:
+                                      description: |-
+                                        Max GraphQL operation (query/mutation/subscription) depth. This sets a limitation on the max nesting on a query that runs against this schema.
+                                        any GraphQL operation that runs past the `max_depth` will add an error message to the response and will return as `null`.
+                                        As as simple example, if the schema is
+                                        ```gql
+                                        type Query {
+                                          employee: Employee
+                                        }
+
+                                        type Employee {
+                                          manager: Employee
+                                          name: String
+                                        }
+                                        ```
+                                        and we set a `max_depth` of `3` and we run a query
+                                        ```gql
+                                        query {             # query depth : 0
+                                          employee {        # query depth : 1
+                                            manager {       # query depth : 2
+                                              name          # query depth : 3
+                                              manager {     # query depth : 3
+                                                name        # query depth : 4
+                                              }
+                                            }
+                                          }
+                                        }
+                                        ```
+                                        the graphql server will respond with a response:
+                                        ```json
+                                        { "data" : {
+                                            "employee" : {
+                                              "manager" : {
+                                                "name" : "Manager 1",
+                                                "manager"  : {
+                                                  "name" : null
+                                          }}}},
+                                          "errors": [
+                                             {"message": "field 'name' exceeds the max operation depth of 3 for this schema"}
+                                           ]
+                                        }
+                                        If not configured, or the value is 0, the query depth will be unbounded.
+                                      maximum: 4294967295
+                                      minimum: 0
+                                      nullable: true
+                                      type: integer
+                                  type: object
+                                resolverMapRefs:
+                                  description: |-
+                                    List of references to GraphQLResolverMap resources. GraphQLResolverMaps
+                                    contain a mapping from GraphQL fields to resolver configuration, so that those fields can be resolved
+                                    locally by this GraphQL-envoy instance.
+                                    Order of the references listed below does matter as resolver maps listed first
+                                    will be given priority over later ones when tie-breaking field resolver configurations.
                                   items:
                                     properties:
                                       clusterName:
@@ -1018,8 +1078,8 @@ spec:
                                           cluster:
                                             description: the cluster of the object.
                                               if the field is omitted, Gloo Mesh will
-                                              attempt to use the same cluster as the
-                                              parent object containing this reference.
+                                              use the same cluster as the parent object
+                                              containing this reference.
                                             type: string
                                           name:
                                             description: the name of the object
@@ -1027,8 +1087,8 @@ spec:
                                           namespace:
                                             description: the namespace of the object.
                                               if the field is omitted, Gloo Mesh will
-                                              attempt to use the same namespace as
-                                              the parent object containing this reference.
+                                              use the same namespace as the parent
+                                              object containing this reference.
                                             type: string
                                         type: object
                                       subset:
@@ -1056,10 +1116,14 @@ spec:
                                           - variable
                                         - required:
                                           - jq
+                                        - required:
+                                          - value
                                     - required:
                                       - variable
                                     - required:
                                       - jq
+                                    - required:
+                                      - value
                                     properties:
                                       jq:
                                         description: |-
@@ -1105,12 +1169,16 @@ spec:
                                           "User john_doe123, Name: John Doe"
                                           ```
                                         type: string
+                                      value:
+                                        description: Static JSON value.
+                                        type: object
                                       variable:
                                         description: |-
                                           The name of a variable declared in the `variables` field. The value of the variable
                                           is returned with no transformation.
                                         type: string
                                     type: object
+                                    x-kubernetes-preserve-unknown-fields: true
                                   description: |-
                                     map of header name to a transformation on extracted variables which are declared
                                     in the `variables` field.
@@ -1125,10 +1193,14 @@ spec:
                                           - variable
                                         - required:
                                           - jq
+                                        - required:
+                                          - value
                                     - required:
                                       - variable
                                     - required:
                                       - jq
+                                    - required:
+                                      - value
                                     properties:
                                       jq:
                                         description: |-
@@ -1174,12 +1246,16 @@ spec:
                                           "User john_doe123, Name: John Doe"
                                           ```
                                         type: string
+                                      value:
+                                        description: Static JSON value.
+                                        type: object
                                       variable:
                                         description: |-
                                           The name of a variable declared in the `variables` field. The value of the variable
                                           is returned with no transformation.
                                         type: string
                                     type: object
+                                    x-kubernetes-preserve-unknown-fields: true
                                   description: |-
                                     map of query parameter name to a transformation on extracted variables which are declared
                                     in the `variables` field.
@@ -1471,16 +1547,16 @@ spec:
                   properties:
                     cluster:
                       description: the cluster of the object. if the field is omitted,
-                        Gloo Mesh will attempt to use the same cluster as the parent
-                        object containing this reference.
+                        Gloo Mesh will use the same cluster as the parent object containing
+                        this reference.
                       type: string
                     name:
                       description: the name of the object
                       type: string
                     namespace:
                       description: the namespace of the object. if the field is omitted,
-                        Gloo Mesh will attempt to use the same namespace as the parent
-                        object containing this reference.
+                        Gloo Mesh will use the same namespace as the parent object
+                        containing this reference.
                       type: string
                   type: object
                 type: array
@@ -1576,16 +1652,16 @@ spec:
                   properties:
                     cluster:
                       description: the cluster of the object. if the field is omitted,
-                        Gloo Mesh will attempt to use the same cluster as the parent
-                        object containing this reference.
+                        Gloo Mesh will use the same cluster as the parent object containing
+                        this reference.
                       type: string
                     name:
                       description: the name of the object
                       type: string
                     namespace:
                       description: the namespace of the object. if the field is omitted,
-                        Gloo Mesh will attempt to use the same namespace as the parent
-                        object containing this reference.
+                        Gloo Mesh will use the same namespace as the parent object
+                        containing this reference.
                       type: string
                   type: object
                 type: array
@@ -1601,16 +1677,16 @@ spec:
                             properties:
                               cluster:
                                 description: the cluster of the object. if the field
-                                  is omitted, Gloo Mesh will attempt to use the same
-                                  cluster as the parent object containing this reference.
+                                  is omitted, Gloo Mesh will use the same cluster
+                                  as the parent object containing this reference.
                                 type: string
                               name:
                                 description: the name of the object
                                 type: string
                               namespace:
                                 description: the namespace of the object. if the field
-                                  is omitted, Gloo Mesh will attempt to use the same
-                                  namespace as the parent object containing this reference.
+                                  is omitted, Gloo Mesh will use the same namespace
+                                  as the parent object containing this reference.
                                 type: string
                             type: object
                           routeIndex:
@@ -1661,16 +1737,16 @@ spec:
                   properties:
                     cluster:
                       description: the cluster of the object. if the field is omitted,
-                        Gloo Mesh will attempt to use the same cluster as the parent
-                        object containing this reference.
+                        Gloo Mesh will use the same cluster as the parent object containing
+                        this reference.
                       type: string
                     name:
                       description: the name of the object
                       type: string
                     namespace:
                       description: the namespace of the object. if the field is omitted,
-                        Gloo Mesh will attempt to use the same namespace as the parent
-                        object containing this reference.
+                        Gloo Mesh will use the same namespace as the parent object
+                        containing this reference.
                       type: string
                   type: object
                 type: array
@@ -1731,7 +1807,7 @@ apiVersion: apiextensions.k8s.io/v1
 kind: CustomResourceDefinition
 metadata:
   annotations:
-    crd.solo.io/specHash: a1168c6f418bafce
+    crd.solo.io/specHash: 771265aecd7fcf55
     crd.solo.io/version: 2.1.0
   labels:
     app: gloo-mesh-apis
@@ -1758,6 +1834,47 @@ spec:
             description: VirtualDestinations define groupings of backing destinations
               (for network traffic).
             properties:
+              clientMode:
+                description: |-
+                  Optional: Client mode determines how the VirtualDestination will be translated.
+                  If nil, the mode is inherited from the WorkspaceSettings defined by the admin.
+                oneOf:
+                - not:
+                    anyOf:
+                    - required:
+                      - auto
+                    - required:
+                      - sniRouting
+                    - required:
+                      - tlsTermination
+                - required:
+                  - auto
+                - required:
+                  - sniRouting
+                - required:
+                  - tlsTermination
+                properties:
+                  auto:
+                    description: |-
+                      The default mode is to use sni routing via tls passthrough at the East/West Gateway to route to services across clusters.
+                      In the future, this may change to become smarter (e.g., detect if any pods backing the virtual destination don't have sidecars,
+                      if so, then use tls termination so all pods are routeable).
+                    maxProperties: 0
+                    type: object
+                  sniRouting:
+                    description: Sni routing mode uses tls passthrough to route traffic
+                      to the proper pod (with sidecar) from the East/West Gateway.
+                    maxProperties: 0
+                    type: object
+                  tlsTermination:
+                    description: |-
+                      Tls termination mode uses tls termination at the East/West Gateway to route traffic to the correct pod.
+                      This mode is ideal for Gloo Mesh Gateway, i.e. some backing pods don't have sidecars.
+                      Since TLS is terminated at the East/West Gateway, the backing service (if it has a sidecar) will not be able to
+                      verify the istio mTLS identity of the originating client; rather it will verify the istio mTLS cert of the East/West Gateway.
+                    maxProperties: 0
+                    type: object
+                type: object
               externalServices:
                 description: |-
                   Selectors for the backing External services that comprise this VirtualDestination.
@@ -1799,8 +1916,8 @@ spec:
                   type: string
                 type: array
               ports:
-                description: The ports on which the VirtualDestination will serve
-                  traffic.
+                description: 'Required: The ports on which the VirtualDestination
+                  will serve traffic. Must have at least one port.'
                 items:
                   properties:
                     number:
@@ -1910,16 +2027,16 @@ spec:
                             properties:
                               cluster:
                                 description: the cluster of the object. if the field
-                                  is omitted, Gloo Mesh will attempt to use the same
-                                  cluster as the parent object containing this reference.
+                                  is omitted, Gloo Mesh will use the same cluster
+                                  as the parent object containing this reference.
                                 type: string
                               name:
                                 description: the name of the object
                                 type: string
                               namespace:
                                 description: the namespace of the object. if the field
-                                  is omitted, Gloo Mesh will attempt to use the same
-                                  namespace as the parent object containing this reference.
+                                  is omitted, Gloo Mesh will use the same namespace
+                                  as the parent object containing this reference.
                                 type: string
                             type: object
                         type: object
@@ -1998,16 +2115,16 @@ spec:
                       properties:
                         cluster:
                           description: the cluster of the object. if the field is
-                            omitted, Gloo Mesh will attempt to use the same cluster
-                            as the parent object containing this reference.
+                            omitted, Gloo Mesh will use the same cluster as the parent
+                            object containing this reference.
                           type: string
                         name:
                           description: the name of the object
                           type: string
                         namespace:
                           description: the namespace of the object. if the field is
-                            omitted, Gloo Mesh will attempt to use the same namespace
-                            as the parent object containing this reference.
+                            omitted, Gloo Mesh will use the same namespace as the
+                            parent object containing this reference.
                           type: string
                       type: object
                     subset:
@@ -2083,7 +2200,7 @@ apiVersion: apiextensions.k8s.io/v1
 kind: CustomResourceDefinition
 metadata:
   annotations:
-    crd.solo.io/specHash: 44aebca3ef2680da
+    crd.solo.io/specHash: 91d3d2a2a1c6f285
     crd.solo.io/version: 2.1.0
   labels:
     app: gloo-mesh-apis
@@ -2451,6 +2568,8 @@ spec:
                 description: |-
                   Optional: Select which gateway workloads implement this virtual gateway in the same workspace.
                   A gateway workload will be selected if it matches any of the provided selectors.
+                  For 'selector.name', specify the gateway service's name.
+                  For 'selector.labels', specify the gateway service's 'spec.selector' label.
                   If workloads is nil, it will be applied to all gateway workloads.
                 items:
                   properties:
@@ -2530,16 +2649,16 @@ spec:
                   properties:
                     cluster:
                       description: the cluster of the object. if the field is omitted,
-                        Gloo Mesh will attempt to use the same cluster as the parent
-                        object containing this reference.
+                        Gloo Mesh will use the same cluster as the parent object containing
+                        this reference.
                       type: string
                     name:
                       description: the name of the object
                       type: string
                     namespace:
                       description: the namespace of the object. if the field is omitted,
-                        Gloo Mesh will attempt to use the same namespace as the parent
-                        object containing this reference.
+                        Gloo Mesh will use the same namespace as the parent object
+                        containing this reference.
                       type: string
                   type: object
                 type: array
@@ -2569,16 +2688,16 @@ spec:
                   properties:
                     cluster:
                       description: the cluster of the object. if the field is omitted,
-                        Gloo Mesh will attempt to use the same cluster as the parent
-                        object containing this reference.
+                        Gloo Mesh will use the same cluster as the parent object containing
+                        this reference.
                       type: string
                     name:
                       description: the name of the object
                       type: string
                     namespace:
                       description: the namespace of the object. if the field is omitted,
-                        Gloo Mesh will attempt to use the same namespace as the parent
-                        object containing this reference.
+                        Gloo Mesh will use the same namespace as the parent object
+                        containing this reference.
                       type: string
                   type: object
                 type: array

@@ -122,7 +122,7 @@ apiVersion: apiextensions.k8s.io/v1
 kind: CustomResourceDefinition
 metadata:
   annotations:
-    crd.solo.io/specHash: a9533e08deaa846a
+    crd.solo.io/specHash: 3820e9efd2fc9190
     crd.solo.io/version: 2.1.0
   labels:
     app: gloo-mesh-apis
@@ -157,13 +157,13 @@ spec:
                           - required:
                             - server
                           - required:
-                            - resolverMapRefs
+                            - local
                       - required:
                         - server
                       - required:
-                        - resolverMapRefs
+                        - local
                       properties:
-                        resolverMapRefs:
+                        local:
                           description: |-
                             List of references to GraphQLResolverMap resources. GraphQLResolverMaps
                             contain a mapping from GraphQL fields to resolver configuration, so that those fields can be resolved
@@ -171,7 +171,67 @@ spec:
                             Order of the references listed below does matter as resolver maps listed first
                             will be given priority over later ones when tie-breaking field resolver configurations.
                           properties:
-                            refs:
+                            options:
+                              properties:
+                                enableIntrospection:
+                                  description: |-
+                                    Do we enable introspection for the schema? general recommendation is to
+                                    disable this for production and hence it defaults to false.
+                                  type: boolean
+                                maxDepth:
+                                  description: |-
+                                    Max GraphQL operation (query/mutation/subscription) depth. This sets a limitation on the max nesting on a query that runs against this schema.
+                                    any GraphQL operation that runs past the `max_depth` will add an error message to the response and will return as `null`.
+                                    As as simple example, if the schema is
+                                    ```gql
+                                    type Query {
+                                      employee: Employee
+                                    }
+
+                                    type Employee {
+                                      manager: Employee
+                                      name: String
+                                    }
+                                    ```
+                                    and we set a `max_depth` of `3` and we run a query
+                                    ```gql
+                                    query {             # query depth : 0
+                                      employee {        # query depth : 1
+                                        manager {       # query depth : 2
+                                          name          # query depth : 3
+                                          manager {     # query depth : 3
+                                            name        # query depth : 4
+                                          }
+                                        }
+                                      }
+                                    }
+                                    ```
+                                    the graphql server will respond with a response:
+                                    ```json
+                                    { "data" : {
+                                        "employee" : {
+                                          "manager" : {
+                                            "name" : "Manager 1",
+                                            "manager"  : {
+                                              "name" : null
+                                      }}}},
+                                      "errors": [
+                                         {"message": "field 'name' exceeds the max operation depth of 3 for this schema"}
+                                       ]
+                                    }
+                                    If not configured, or the value is 0, the query depth will be unbounded.
+                                  maximum: 4294967295
+                                  minimum: 0
+                                  nullable: true
+                                  type: integer
+                              type: object
+                            resolverMapRefs:
+                              description: |-
+                                List of references to GraphQLResolverMap resources. GraphQLResolverMaps
+                                contain a mapping from GraphQL fields to resolver configuration, so that those fields can be resolved
+                                locally by this GraphQL-envoy instance.
+                                Order of the references listed below does matter as resolver maps listed first
+                                will be given priority over later ones when tie-breaking field resolver configurations.
                               items:
                                 properties:
                                   clusterName:
@@ -258,9 +318,9 @@ spec:
                                     properties:
                                       cluster:
                                         description: the cluster of the object. if
-                                          the field is omitted, Gloo Mesh will attempt
-                                          to use the same cluster as the parent object
-                                          containing this reference.
+                                          the field is omitted, Gloo Mesh will use
+                                          the same cluster as the parent object containing
+                                          this reference.
                                         type: string
                                       name:
                                         description: the name of the object
@@ -268,8 +328,8 @@ spec:
                                       namespace:
                                         description: the namespace of the object.
                                           if the field is omitted, Gloo Mesh will
-                                          attempt to use the same namespace as the
-                                          parent object containing this reference.
+                                          use the same namespace as the parent object
+                                          containing this reference.
                                         type: string
                                     type: object
                                   subset:
@@ -297,10 +357,14 @@ spec:
                                       - variable
                                     - required:
                                       - jq
+                                    - required:
+                                      - value
                                 - required:
                                   - variable
                                 - required:
                                   - jq
+                                - required:
+                                  - value
                                 properties:
                                   jq:
                                     description: |-
@@ -346,12 +410,16 @@ spec:
                                       "User john_doe123, Name: John Doe"
                                       ```
                                     type: string
+                                  value:
+                                    description: Static JSON value.
+                                    type: object
                                   variable:
                                     description: |-
                                       The name of a variable declared in the `variables` field. The value of the variable
                                       is returned with no transformation.
                                     type: string
                                 type: object
+                                x-kubernetes-preserve-unknown-fields: true
                               description: |-
                                 map of header name to a transformation on extracted variables which are declared
                                 in the `variables` field.
@@ -366,10 +434,14 @@ spec:
                                       - variable
                                     - required:
                                       - jq
+                                    - required:
+                                      - value
                                 - required:
                                   - variable
                                 - required:
                                   - jq
+                                - required:
+                                  - value
                                 properties:
                                   jq:
                                     description: |-
@@ -415,12 +487,16 @@ spec:
                                       "User john_doe123, Name: John Doe"
                                       ```
                                     type: string
+                                  value:
+                                    description: Static JSON value.
+                                    type: object
                                   variable:
                                     description: |-
                                       The name of a variable declared in the `variables` field. The value of the variable
                                       is returned with no transformation.
                                     type: string
                                 type: object
+                                x-kubernetes-preserve-unknown-fields: true
                               description: |-
                                 map of query parameter name to a transformation on extracted variables which are declared
                                 in the `variables` field.
@@ -626,7 +702,7 @@ apiVersion: apiextensions.k8s.io/v1
 kind: CustomResourceDefinition
 metadata:
   annotations:
-    crd.solo.io/specHash: 4f0c89bbda55b2c0
+    crd.solo.io/specHash: a081afec3745fa03
     crd.solo.io/version: 2.1.0
   labels:
     app: gloo-mesh-apis
@@ -677,130 +753,15 @@ spec:
                               Currently, only one the first resolver configuration will be respected and a warning will be thrown
                               if more than one resolver is in the list.
                             items:
-                              allOf:
-                              - oneOf:
-                                - not:
-                                    anyOf:
-                                    - required:
-                                      - httpMatcher
-                                - required:
-                                  - httpMatcher
-                              - oneOf:
-                                - not:
-                                    anyOf:
-                                    - required:
-                                      - restResolver
-                                - required:
-                                  - restResolver
+                              oneOf:
+                              - not:
+                                  anyOf:
+                                  - required:
+                                    - restResolver
+                              - required:
+                                - restResolver
                               properties:
-                                httpMatcher:
-                                  properties:
-                                    headers:
-                                      description: 'Optional: Specify a set of headers
-                                        which requests must match in entirety (all
-                                        headers must match).'
-                                      items:
-                                        properties:
-                                          invertMatch:
-                                            description: |-
-                                              If set to true, the result of the match will be inverted. Defaults to false.
-
-                                                 Examples:
-
-                                                     - name=foo, invert_match=true: matches if no header named `foo` is present
-                                                     - name=foo, value=bar, invert_match=true: matches if no header named `foo` with value `bar` is present
-                                                     - name=foo, value=``\d{3}``, regex=true, invert_match=true: matches if no header named `foo` with a value consisting of three integers is present.
-                                            type: boolean
-                                          name:
-                                            description: Specify the name of the header
-                                              in the request.
-                                            type: string
-                                          regex:
-                                            description: Specify whether the header
-                                              value should be treated as regex.
-                                            type: boolean
-                                          value:
-                                            description: |-
-                                              Specify the value of the header. If the value is absent a request that
-                                              has the name header will match, regardless of the header’s value.
-                                            type: string
-                                        type: object
-                                      type: array
-                                    method:
-                                      description: 'Optional: Specify an HTTP method
-                                        to match against.'
-                                      type: string
-                                    name:
-                                      description: |-
-                                        Optional: The name assigned to a match. The match's name will be
-                                        concatenated with the parent route's name and will be logged in
-                                        the access logs for requests matching this route.
-                                      type: string
-                                    queryParameters:
-                                      description: 'Optional: Specify a set of URL
-                                        query parameters which requests must match
-                                        in entirety (all query params must match).'
-                                      items:
-                                        properties:
-                                          name:
-                                            description: Specify the name of a key
-                                              that must be present in the requested
-                                              path's query string.
-                                            type: string
-                                          regex:
-                                            description: If true, treat `value` as
-                                              a regular expression.
-                                            type: boolean
-                                          value:
-                                            description: Specify the value of the
-                                              query parameter keyed on `name`.
-                                            type: string
-                                        type: object
-                                      type: array
-                                    uri:
-                                      description: 'Optional: Specify match criteria
-                                        against the targeted path.'
-                                      oneOf:
-                                      - not:
-                                          anyOf:
-                                          - required:
-                                            - exact
-                                          - required:
-                                            - prefix
-                                          - required:
-                                            - regex
-                                          - required:
-                                            - suffix
-                                      - required:
-                                        - exact
-                                      - required:
-                                        - prefix
-                                      - required:
-                                        - regex
-                                      - required:
-                                        - suffix
-                                      properties:
-                                        exact:
-                                          description: Exact string match.
-                                          type: string
-                                        ignoreCase:
-                                          description: If true, indicates the exact/prefix/suffix
-                                            matching should be case insensitive. This
-                                            has no effect for the regex match.
-                                          type: boolean
-                                        prefix:
-                                          description: Prefix-based match.
-                                          type: string
-                                        regex:
-                                          description: ECMAscript style regex-based
-                                            match.
-                                          type: string
-                                        suffix:
-                                          description: Suffix-based match.
-                                          type: string
-                                      type: object
-                                  type: object
-                                responseTransform:
+                                resolverResultTransform:
                                   description: |-
                                     Use a transformation on extracted variables to transform the upstream REST response.
                                     By default, the transformation is empty and the destination response is left as is before
@@ -812,10 +773,14 @@ spec:
                                         - variable
                                       - required:
                                         - jq
+                                      - required:
+                                        - value
                                   - required:
                                     - variable
                                   - required:
                                     - jq
+                                  - required:
+                                    - value
                                   properties:
                                     jq:
                                       description: |-
@@ -861,12 +826,16 @@ spec:
                                         "User john_doe123, Name: John Doe"
                                         ```
                                       type: string
+                                    value:
+                                      description: Static JSON value.
+                                      type: object
                                     variable:
                                       description: |-
                                         The name of a variable declared in the `variables` field. The value of the variable
                                         is returned with no transformation.
                                       type: string
                                   type: object
+                                  x-kubernetes-preserve-unknown-fields: true
                                 restResolver:
                                   description: Resolves values by making a HTTP/2
                                     request to a HTTP/REST destination.
@@ -923,9 +892,8 @@ spec:
                                               cluster:
                                                 description: the cluster of the object.
                                                   if the field is omitted, Gloo Mesh
-                                                  will attempt to use the same cluster
-                                                  as the parent object containing
-                                                  this reference.
+                                                  will use the same cluster as the
+                                                  parent object containing this reference.
                                                 type: string
                                               name:
                                                 description: the name of the object
@@ -933,9 +901,9 @@ spec:
                                               namespace:
                                                 description: the namespace of the
                                                   object. if the field is omitted,
-                                                  Gloo Mesh will attempt to use the
-                                                  same namespace as the parent object
-                                                  containing this reference.
+                                                  Gloo Mesh will use the same namespace
+                                                  as the parent object containing
+                                                  this reference.
                                                 type: string
                                             type: object
                                           subset:
@@ -972,10 +940,14 @@ spec:
                                                 - variable
                                               - required:
                                                 - jq
+                                              - required:
+                                                - value
                                           - required:
                                             - variable
                                           - required:
                                             - jq
+                                          - required:
+                                            - value
                                           properties:
                                             jq:
                                               description: |-
@@ -1021,12 +993,16 @@ spec:
                                                 "User john_doe123, Name: John Doe"
                                                 ```
                                               type: string
+                                            value:
+                                              description: Static JSON value.
+                                              type: object
                                             variable:
                                               description: |-
                                                 The name of a variable declared in the `variables` field. The value of the variable
                                                 is returned with no transformation.
                                               type: string
                                           type: object
+                                          x-kubernetes-preserve-unknown-fields: true
                                         headers:
                                           additionalProperties:
                                             oneOf:
@@ -1036,10 +1012,14 @@ spec:
                                                   - variable
                                                 - required:
                                                   - jq
+                                                - required:
+                                                  - value
                                             - required:
                                               - variable
                                             - required:
                                               - jq
+                                            - required:
+                                              - value
                                             properties:
                                               jq:
                                                 description: |-
@@ -1085,12 +1065,16 @@ spec:
                                                   "User john_doe123, Name: John Doe"
                                                   ```
                                                 type: string
+                                              value:
+                                                description: Static JSON value.
+                                                type: object
                                               variable:
                                                 description: |-
                                                   The name of a variable declared in the `variables` field. The value of the variable
                                                   is returned with no transformation.
                                                 type: string
                                             type: object
+                                            x-kubernetes-preserve-unknown-fields: true
                                           description: |-
                                             Sets the headers on the request to the REST destination.
                                             This includes setting HTTP :path header.
@@ -1108,10 +1092,14 @@ spec:
                                                   - variable
                                                 - required:
                                                   - jq
+                                                - required:
+                                                  - value
                                             - required:
                                               - variable
                                             - required:
                                               - jq
+                                            - required:
+                                              - value
                                             properties:
                                               jq:
                                                 description: |-
@@ -1157,12 +1145,16 @@ spec:
                                                   "User john_doe123, Name: John Doe"
                                                   ```
                                                 type: string
+                                              value:
+                                                description: Static JSON value.
+                                                type: object
                                               variable:
                                                 description: |-
                                                   The name of a variable declared in the `variables` field. The value of the variable
                                                   is returned with no transformation.
                                                 type: string
                                             type: object
+                                            x-kubernetes-preserve-unknown-fields: true
                                           description: |-
                                             Sets the query parameters on the request to the REST destination.
                                             The transformation must result in a string value, or an error will be sent back to the client.
@@ -1173,6 +1165,10 @@ spec:
                                         The span name for the upstream REST request, used for tracing.
                                         If left empty or not set, the request span name will be set to the upstream cluster name.
                                       nullable: true
+                                      type: string
+                                    timeout:
+                                      description: Set the timeout of the HTTP request
+                                        to the REST service (default 5s)
                                       type: string
                                     variables:
                                       additionalProperties:
@@ -1193,6 +1189,12 @@ spec:
                                   type: object
                               type: object
                             type: array
+                          statPrefix:
+                            description: |-
+                              The stats prefix which will be used for this resolver.
+                              If empty, will generate a stats prefix ${RESOLVER_NAME}
+                            nullable: true
+                            type: string
                           variables:
                             additionalProperties:
                               oneOf:

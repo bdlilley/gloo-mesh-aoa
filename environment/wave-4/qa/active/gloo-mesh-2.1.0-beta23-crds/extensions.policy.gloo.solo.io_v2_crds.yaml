@@ -4,7 +4,7 @@ apiVersion: apiextensions.k8s.io/v1
 kind: CustomResourceDefinition
 metadata:
   annotations:
-    crd.solo.io/specHash: f0f6f502b87a2597
+    crd.solo.io/specHash: bc8923ace23abad5
     crd.solo.io/version: 2.1.0
   labels:
     app: gloo-mesh-apis
@@ -195,7 +195,7 @@ spec:
                         rootId:
                           description: |-
                             The `root id` must match the `root id` defined inside the filter.
-                            If the user does not provide this field, Gloo Mesh will attempt to pull the image
+                            If the user does not provide this field, Gloo Mesh will pull the image
                             and set it from the `filter_conf` contained in the image config.
                             Note that if the `filter_source` is not set to `wasm_image_source`, this field is required.
                           type: string
@@ -279,16 +279,16 @@ spec:
                       properties:
                         cluster:
                           description: the cluster of the object. if the field is
-                            omitted, Gloo Mesh will attempt to use the same cluster
-                            as the parent object containing this reference.
+                            omitted, Gloo Mesh will use the same cluster as the parent
+                            object containing this reference.
                           type: string
                         name:
                           description: the name of the object
                           type: string
                         namespace:
                           description: the namespace of the object. if the field is
-                            omitted, Gloo Mesh will attempt to use the same namespace
-                            as the parent object containing this reference.
+                            omitted, Gloo Mesh will use the same namespace as the
+                            parent object containing this reference.
                           type: string
                       type: object
                   type: object
@@ -301,16 +301,16 @@ spec:
                   properties:
                     cluster:
                       description: the cluster of the object. if the field is omitted,
-                        Gloo Mesh will attempt to use the same cluster as the parent
-                        object containing this reference.
+                        Gloo Mesh will use the same cluster as the parent object containing
+                        this reference.
                       type: string
                     name:
                       description: the name of the object
                       type: string
                     namespace:
                       description: the namespace of the object. if the field is omitted,
-                        Gloo Mesh will attempt to use the same namespace as the parent
-                        object containing this reference.
+                        Gloo Mesh will use the same namespace as the parent object
+                        containing this reference.
                       type: string
                   type: object
                 type: array

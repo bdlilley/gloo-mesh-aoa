@@ -4,7 +4,7 @@ apiVersion: apiextensions.k8s.io/v1
 kind: CustomResourceDefinition
 metadata:
   annotations:
-    crd.solo.io/specHash: 644cdf5ac0ca6dcf
+    crd.solo.io/specHash: 153beb80b066363c
     crd.solo.io/version: 2.1.0
   labels:
     app: gloo-mesh-apis
@@ -231,16 +231,16 @@ spec:
                       properties:
                         cluster:
                           description: the cluster of the object. if the field is
-                            omitted, Gloo Mesh will attempt to use the same cluster
-                            as the parent object containing this reference.
+                            omitted, Gloo Mesh will use the same cluster as the parent
+                            object containing this reference.
                           type: string
                         name:
                           description: the name of the object
                           type: string
                         namespace:
                           description: the namespace of the object. if the field is
-                            omitted, Gloo Mesh will attempt to use the same namespace
-                            as the parent object containing this reference.
+                            omitted, Gloo Mesh will use the same namespace as the
+                            parent object containing this reference.
                           type: string
                       type: object
                   type: object
@@ -253,16 +253,16 @@ spec:
                   properties:
                     cluster:
                       description: the cluster of the object. if the field is omitted,
-                        Gloo Mesh will attempt to use the same cluster as the parent
-                        object containing this reference.
+                        Gloo Mesh will use the same cluster as the parent object containing
+                        this reference.
                       type: string
                     name:
                       description: the name of the object
                       type: string
                     namespace:
                       description: the namespace of the object. if the field is omitted,
-                        Gloo Mesh will attempt to use the same namespace as the parent
-                        object containing this reference.
+                        Gloo Mesh will use the same namespace as the parent object
+                        containing this reference.
                       type: string
                   type: object
                 type: array
