@@ -2,7 +2,7 @@
 #!/bin/bash
 current_branch=''$1''
 target_branch=''$2''
-environment_overlay=${3:-prod} # prod, qa, dev
+environment_overlay=${3:-prod} # prod, qa, dev, base
 # number of app waves in the environments directory
 environment_waves="$(ls ../environment | wc -l)"
 

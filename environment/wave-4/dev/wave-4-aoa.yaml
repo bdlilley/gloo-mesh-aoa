@@ -9,7 +9,7 @@ spec:
   project: default
   source:
     repoURL: https://github.com/ably77/gloo-mesh-aoa/
-    targetRevision: HEAD
+    targetRevision: scratchspace-v1
     path: environment/wave-4/dev/active/
   destination:
     server: https://kubernetes.default.svc
