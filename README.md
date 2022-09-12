@@ -176,9 +176,14 @@ environment
 ```
 
 # forking this repo
-Fork this repo and run the script below to your GitHub username if owning the control over pushing/pulling into the repo is desirable
+Fork this repo and modify the variables in the `tools/configure-wave.sh` script to point to your own github username, repo name, and branch
 ```
-cd tools/
-./replace-github-username.sh <github_username>
+wave_name=${1:-""}
+environment_overlay=${2:-prod} # prod, qa, dev, base
+cluster_context=${3:-mgmt}
+github_username=${4:-ably77}
+repo_name=${5:-gloo-mesh-aoa}
+target_branch=${6:-HEAD}
 ```
-Now you can push new manifests into the corresponding `environments` directories in your fork to sync them using Argo CD
+
+Now you can should be able to deploy and sync the corresponding `environment` waves in your fork and push new changes to it
