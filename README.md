@@ -5,12 +5,15 @@ This repo provides a multitenant capable GitOps workflow structure that can be f
 - prod:
     - gloo mesh 2.1.0-beta23
     - istio 1.13.4
+    - revision: 1-13
 - qa:
     - gloo mesh 2.1.0-beta24
     - istio 1.14.3
+    - revision: 1-14
 - dev:
     - gloo mesh 2.1.0-beta25
-    - istio 1.14.3
+    - istio 1.15.0
+    - revision: 1-15
 
 # Prerequisites 
 - 1 Kubernetes Cluster
