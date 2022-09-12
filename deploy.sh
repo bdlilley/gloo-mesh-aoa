@@ -34,7 +34,6 @@ for i in $(ls -l environment/ | grep -v ^total | awk '{print $9}'); do
   # run init script if it exists
   [[ -f "environment/${i}/init.sh" ]] && ./environment/${i}/init.sh ${i} ${environment_overlay}
   # deploy aoa wave
-  #kubectl apply -f environment/${i}/${environment_overlay}/wave-aoa.yaml --context ${cluster_context};
   ./tools/configure-wave.sh ${i} ${environment_overlay} ${cluster_context}
   # run test script if it exists
   [[ -f "environment/${i}/test.sh" ]] && ./environment/${i}/test.sh

@@ -7,9 +7,9 @@ This repo provides a multitenant capable GitOps workflow structure that can be f
     - istio 1.13.4
 - qa:
     - gloo mesh 2.1.0-beta23
-    - istio 1.13.4
+    - istio 1.14.3
 - dev:
-    - gloo mesh 2.1.0-beta23
+    - gloo mesh 2.1.0-beta24
     - istio 1.14.3
 
 # Prerequisites 
@@ -35,110 +35,141 @@ Note:
 The app-of-apps pattern uses a generic Argo Application to sync all manifests in a particular Git directory, rather than directly point to a Kustomize, YAML, or Helm configuration. Anything pushed into the `environment/<overlay>/active` directory is deployed by it's corresponding app-of-app
 ```
 environment
-├── wave-1
-│   ├── active
-│   │   ├── argocd-ns.yaml
-│   │   ├── bookinfo-backends-ns.yaml
-│   │   ├── bookinfo-frontends-ns.yaml
-│   │   ├── cert-manager-cacerts.yaml
-│   │   ├── cert-manager-ns.yaml
-│   │   ├── gloo-mesh-addons-ns.yaml
-│   │   ├── gloo-mesh-ns.yaml
-│   │   ├── gloo-mesh-relay-identity-token-secret.yaml
-│   │   ├── gloo-mesh-relay-root-ca.yaml
-│   │   ├── httpbin-ns.yaml
-│   │   ├── istio-gateways-ns.yaml
-│   │   └── istio-system-ns.yaml
+├── wave-1-clusterconfig
+│   ├── base
+│   │   └── active
+│   │       ├── argocd-ns.yaml
+│   │       ├── bookinfo-backends-ns.yaml
+│   │       ├── bookinfo-frontends-ns.yaml
+│   │       ├── cert-manager-cacerts.yaml
+│   │       ├── cert-manager-ns.yaml
+│   │       ├── gloo-mesh-addons-ns.yaml
+│   │       ├── gloo-mesh-ns.yaml
+│   │       ├── gloo-mesh-relay-identity-token-secret.yaml
+│   │       ├── gloo-mesh-relay-root-ca.yaml
+│   │       ├── httpbin-ns.yaml
+│   │       ├── istio-gateways-ns.yaml
+│   │       ├── istio-system-ns.yaml
+│   │       └── kustomization.yaml
+│   ├── dev
+│   │   └── active
+│   │       └── kustomization.yaml
 │   ├── init.sh
-│   ├── non-active
-│   │   ├── 1.7-cert-manager-crds.yaml
-│   │   ├── cert-manager-cacerts.yaml
-│   │   ├── cert-manager-ns.yaml
-│   │   └── relay-forwarding-identity-token-secret.yaml
-│   ├── test.sh
-│   └── wave-1-aoa.yaml
-├── wave-2
-│   ├── active
-│   │   └── cert-manager.yaml
+│   ├── prod
+│   │   └── active
+│   │       └── kustomization.yaml
+│   ├── qa
+│   │   └── active
+│   │       └── kustomization.yaml
+│   └── test.sh
+├── wave-2-certmanager
+│   ├── base
+│   │   └── active
+│   │       ├── cert-manager.yaml
+│   │       └── kustomization.yaml
+│   ├── dev
+│   │   └── active
+│   │       └── kustomization.yaml
 │   ├── init.sh
-│   ├── test.sh
-│   └── wave-2-aoa.yaml
-├── wave-3
-│   ├── active
-│   │   ├── gateway-cert.yaml
-│   │   ├── grafana.yaml
-│   │   ├── istio-base.yaml
-│   │   ├── istio-ingressgateway.yaml
-│   │   ├── istiod-1-13.yaml
-│   │   ├── kiali.yaml
-│   │   └── prometheus.yaml
+│   ├── prod
+│   │   └── active
+│   │       └── kustomization.yaml
+│   ├── qa
+│   │   └── active
+│   │       └── kustomization.yaml
+│   └── test.sh
+├── wave-3-istio
+│   ├── base
+│   │   └── active
+│   │       ├── gateway-cert.yaml
+│   │       ├── grafana.yaml
+│   │       ├── istio-base.yaml
+│   │       ├── istio-ingressgateway.yaml
+│   │       ├── istiod.yaml
+│   │       ├── kiali.yaml
+│   │       ├── kustomization.yaml
+│   │       └── prometheus.yaml
+│   ├── dev
+│   │   └── active
+│   │       ├── kustomization.yaml
+│   │       └── patches
+│   │           ├── grafana-1.14.3.yaml
+│   │           ├── istio-base-1.14.3.yaml
+│   │           ├── istio-ingressgateway-1.14.3.yaml
+│   │           └── istiod-1.14.3.yaml
 │   ├── init.sh
-│   ├── test.sh
-│   └── wave-3-aoa.yaml
-├── wave-4
-│   ├── active
-│   │   ├── cert-manager-clusterissuer.yaml
-│   │   ├── cert-manager-issuer.yaml
-│   │   ├── gloo-mesh-addons.yaml
-│   │   ├── gloo-mesh-agent-cert.yaml
-│   │   ├── gloo-mesh-agent.yaml
-│   │   ├── gloo-mesh-cert.yaml
-│   │   ├── gloo-mesh-ee-helm-disableca.yaml
-│   │   └── gloo-mesh-relay-tls-signing-cert.yaml
+│   ├── prod
+│   │   └── active
+│   │       └── kustomization.yaml
+│   ├── qa
+│   │   └── active
+│   │       ├── kustomization.yaml
+│   │       └── patches
+│   │           ├── grafana-1.14.3.yaml
+│   │           ├── istio-base-1.14.3.yaml
+│   │           ├── istio-ingressgateway-1.14.3.yaml
+│   │           └── istiod-1.14.3.yaml
+│   └── test.sh
+├── wave-4-gloo-mesh
+│   ├── base
+│   │   └── active
+│   │       ├── cert-manager-clusterissuer.yaml
+│   │       ├── cert-manager-issuer.yaml
+│   │       ├── gloo-mesh-addons.yaml
+│   │       ├── gloo-mesh-agent-cert.yaml
+│   │       ├── gloo-mesh-agent.yaml
+│   │       ├── gloo-mesh-cert.yaml
+│   │       ├── gloo-mesh-crds.yaml
+│   │       ├── gloo-mesh-ee-helm-disableca.yaml
+│   │       ├── gloo-mesh-relay-tls-signing-cert.yaml
+│   │       └── kustomization.yaml
+│   ├── dev
+│   │   └── active
+│   │       ├── kustomization.yaml
+│   │       └── patches
+│   │           ├── gloo-mesh-addons.yaml
+│   │           ├── gloo-mesh-agent.yaml
+│   │           ├── gloo-mesh-crds.yaml
+│   │           └── gloo-mesh-ee-helm-disableca.yaml
 │   ├── init.sh
-│   ├── test.sh
-│   └── wave-4-aoa.yaml
-├── wave-5
-│   ├── active
-│   │   ├── bookinfo-backends-dyaml.yaml
-│   │   └── bookinfo-frontends-dyaml.yaml
-│   ├── init.sh
-│   ├── non-active
-│   │   └── bookinfo-cert.yaml
-│   ├── test.sh
-│   └── wave-5-aoa.yaml
-├── wave-6
-│   ├── active
-│   │   ├── httpbin-in-mesh.yaml
-│   │   └── httpbin-not-in-mesh.yaml
-│   ├── init.sh
-│   ├── test.sh
-│   └── wave-6-aoa.yaml
-└── wave-7
-    ├── active
-    │   ├── argocd-mgmt-rt-80.yaml
-    │   ├── bookinfo-ratelimit-transformationfilter.yaml
-    │   ├── bookinfo-ratelimitclientconfig.yaml
-    │   ├── bookinfo-ratelimitpolicy.yaml
-    │   ├── bookinfo-ratelimitserverconfig.yaml
-    │   ├── bookinfo-ratelimitserversettings.yaml
-    │   ├── bookinfo-rt.yaml
-    │   ├── bookinfo-wafpolicy-log4shell.yaml
-    │   ├── bookinfo-workspace.yaml
-    │   ├── bookinfo-workspacesettings.yaml
-    │   ├── gloo-mesh-admin-workspace.yaml
-    │   ├── gloo-mesh-admin-workspacesettings.yaml
-    │   ├── gloo-mesh-gateways-workspace.yaml
-    │   ├── gloo-mesh-gateways-workspacesettings.yaml
-    │   ├── gloo-mesh-global-workspacesettings.yaml
-    │   ├── gloo-mesh-mgmt-kubernetescluster.yaml
-    │   ├── gloo-mesh-mgmt-virtualgateway-443.yaml
-    │   ├── gloo-mesh-mgmt-virtualgateway-80.yaml
-    │   ├── gloo-mesh-ui-rt-443.yaml
-    │   ├── grafana-rt-443.yaml
-    │   ├── httpbin-ratelimit-transformationpolicy.yaml
-    │   ├── httpbin-ratelimitclientconfig.yaml
-    │   ├── httpbin-ratelimitpolicy.yaml
-    │   ├── httpbin-ratelimitserverconfig.yaml
-    │   ├── httpbin-ratelimitserversettings.yaml
-    │   ├── httpbin-rt-443.yaml
-    │   ├── httpbin-rt-80.yaml
-    │   ├── httpbin-wafpolicy-log4shell.yaml
-    │   ├── httpbin-workspace.yaml
-    │   └── httpbin-workspacesettings.yaml
+│   ├── prod
+│   │   └── active
+│   │       └── kustomization.yaml
+│   ├── qa
+│   │   └── active
+│   │       ├── kustomization.yaml
+│   │       └── patches
+│   │           ├── gloo-mesh-addons.yaml
+│   │           ├── gloo-mesh-agent.yaml
+│   │           ├── gloo-mesh-crds.yaml
+│   │           └── gloo-mesh-ee-helm-disableca.yaml
+│   └── test.sh
+└── wave-5-gloo-mesh-config
+    ├── base
+    │   └── active
+    │       ├── argocd-mgmt-rt-80.yaml
+    │       ├── gloo-mesh-admin-workspace.yaml
+    │       ├── gloo-mesh-admin-workspacesettings.yaml
+    │       ├── gloo-mesh-gateways-workspace.yaml
+    │       ├── gloo-mesh-gateways-workspacesettings.yaml
+    │       ├── gloo-mesh-global-workspacesettings.yaml
+    │       ├── gloo-mesh-mgmt-kubernetescluster.yaml
+    │       ├── gloo-mesh-mgmt-virtualgateway-443.yaml
+    │       ├── gloo-mesh-mgmt-virtualgateway-80.yaml
+    │       ├── gloo-mesh-ui-rt-443.yaml
+    │       ├── grafana-rt-443.yaml
+    │       └── kustomization.yaml
+    ├── dev
+    │   └── active
+    │       └── kustomization.yaml
     ├── init.sh
-    ├── test.sh
-    └── wave-7-aoa.yaml
+    ├── prod
+    │   └── active
+    │       └── kustomization.yaml
+    ├── qa
+    │   └── active
+    │       └── kustomization.yaml
+    └── test.sh
 ```
 
 # forking this repo

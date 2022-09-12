@@ -7,4 +7,4 @@ resources:
 - ../../base/active/
 
 commonLabels:
-  istio.io/rev: 1-13
+  istio.io/rev: 1-14

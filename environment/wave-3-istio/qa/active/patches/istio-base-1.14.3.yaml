@@ -1,18 +1,21 @@
 apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
-  name: gloo-mesh-crds
+  name: istio-base
   namespace: argocd
   finalizers:
   - resources-finalizer.argocd.argoproj.io
+  annotations:
+    argocd.argoproj.io/sync-wave: "-3"
 spec:
-  project: default
-  source:
-    repoURL: https://github.com/solo-io/gitops-library/
-    targetRevision: HEAD
-    path: gloo-mesh/gloo-mesh-crds/2.1.0-beta24/
   destination:
     server: https://kubernetes.default.svc
+    namespace: istio-system
+  project: default
+  source:
+    chart: base
+    repoURL: https://istio-release.storage.googleapis.com/charts
+    targetRevision: 1.14.3
   syncPolicy:
     automated:
       prune: true
