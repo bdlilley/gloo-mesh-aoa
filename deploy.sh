@@ -9,6 +9,9 @@
 LICENSE_KEY=${1:-""}
 cluster_context=${2:-mgmt}
 environment_overlay=${3:-prod} # prod, qa, dev, base
+github_username=${4:-ably77}
+repo_name=${5:-gloo-mesh-aoa}
+target_branch=${6:-HEAD}
 
 # check to see if defined contexts exist
 if [[ $(kubectl config get-contexts | grep ${cluster_context}) == "" ]] ; then
@@ -32,7 +35,7 @@ cd ..
 for i in $(ls -l environment/ | grep -v ^total | awk '{print $9}'); do 
   echo "starting ${i}"
   # run init script if it exists
-  [[ -f "environment/${i}/init.sh" ]] && ./environment/${i}/init.sh ${i} ${environment_overlay}
+  [[ -f "environment/${i}/init.sh" ]] && ./environment/${i}/init.sh ${i} ${environment_overlay} ${cluster_context} ${github_username} ${repo_name} ${target_branch}
   # deploy aoa wave
   ./tools/configure-wave.sh ${i} ${environment_overlay} ${cluster_context}
   # run test script if it exists
