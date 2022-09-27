@@ -7,8 +7,6 @@ resources:
 - argocd-ns.yaml
 - bookinfo-backends-ns.yaml
 - bookinfo-frontends-ns.yaml
-- cert-manager-cacerts.yaml
-- cert-manager-ns.yaml
 - gloo-mesh-addons-ns.yaml
 - gloo-mesh-ns.yaml
 - gloo-mesh-relay-identity-token-secret.yaml
