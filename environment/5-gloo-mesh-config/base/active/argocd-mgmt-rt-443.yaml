@@ -3,25 +3,28 @@ kind: RouteTable
 metadata:
   labels:
     expose: "true"
-  name: mgmt-argo-rt-80
+  name: mgmt-argo-rt-443
   namespace: argocd
 spec:
   hosts:
   - '*'
   http:
-  - forwardTo:
+  - name: argocd
+    labels:
+      waf: "true"
+    matchers:
+    - uri:
+        prefix: /argo
+    forwardTo:
       destinations:
       - port:
-          number: 80
+          number: 443
         ref:
           cluster: mgmt
           name: argocd-server
-          namespace: argocd
-    labels:
-      waf: "true"
-    name: argocd
+          namespace: argocd    
   virtualGateways:
   - cluster: mgmt
-    name: mgmt-north-south-gw-80
+    name: mgmt-north-south-gw-443
     namespace: istio-gateways
   workloadSelectors: []
