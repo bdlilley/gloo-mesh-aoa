@@ -5,9 +5,3 @@ kind: Kustomization
 # list of resources to be Applied
 resources:
 - ../../base/active/
-
-patchesStrategicMerge:
-- patches/gloo-mesh-agent.yaml
-- patches/gloo-mesh-addons.yaml
-- patches/gloo-mesh-crds.yaml
-- patches/gloo-mesh-ee-helm-disableca.yaml
