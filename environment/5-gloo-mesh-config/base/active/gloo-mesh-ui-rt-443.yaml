@@ -13,6 +13,10 @@ spec:
     labels:
     matchers:
     - uri:
+        prefix: /welcome
+    - uri:
+        prefix: /login
+    - uri:
         prefix: /graph
     - uri:
         prefix: /gateways
