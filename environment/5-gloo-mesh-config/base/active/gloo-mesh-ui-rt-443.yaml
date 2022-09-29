@@ -7,7 +7,7 @@ metadata:
   namespace: gloo-mesh
 spec:
   hosts:
-  - '*'
+  - 'gmui-local.glootest.com'
   http:
   - name: gloo-mesh-ui-main
     labels:
@@ -38,6 +38,8 @@ spec:
         prefix: /rpc.gloo.solo.io.WorkspacesApi
     - uri:
         prefix: /rpc.gloo.solo.io.RoutingApi
+    - uri:
+        prefix: /rpc.gloo.solo.io.PoliciesApi
     - uri:
         prefix: /oidc-callback
     forwardTo:
