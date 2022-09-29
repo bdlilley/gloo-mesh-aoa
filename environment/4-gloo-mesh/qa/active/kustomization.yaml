@@ -5,3 +5,7 @@ kind: Kustomization
 # list of resources to be Applied
 resources:
 - ../../base/active/
+
+# uncomment patch if testing a version other than base
+patchesStrategicMerge:
+- patches/gloo-mesh-ee-helm-disableca.yaml
