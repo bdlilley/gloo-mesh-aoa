@@ -6,13 +6,20 @@ metadata:
 spec:
   exportTo:
   - workspaces:
-    - name: '*'
+    - name: "*"
+    resources:
+    - kind: SERVICE
+      namespace: gloo-mesh-addons
+    - kind: SERVICE
+      namespace: istio-gateways
+    - kind: VIRTUAL_DESTINATION
+      namespace: gloo-mesh-addons
   importFrom:
   - workspaces:
     - name: '*'
   options:
     federation:                     # federate only the gloo-mesh-addons
-      enabled: false
+      enabled: true
       hostSuffix: global
       serviceSelector:
       - namespace: gloo-mesh-addons
