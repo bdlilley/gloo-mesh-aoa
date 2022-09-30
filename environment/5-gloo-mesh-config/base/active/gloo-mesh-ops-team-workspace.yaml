@@ -1,11 +1,17 @@
 apiVersion: admin.gloo.solo.io/v2
 kind: Workspace
 metadata:
-  name: gateways
+  name: ops-team
   namespace: gloo-mesh
 spec:
   workloadClusters:
-  - name: mgmt
+  - name: 'mgmt'
+    namespaces:
+    - name: argocd
+    - name: gloo-mesh
+    - name: istio-system
+    - name: ops-team-config
+  - name: '*'
     namespaces:
     - name: istio-gateways
     - name: gloo-mesh-addons

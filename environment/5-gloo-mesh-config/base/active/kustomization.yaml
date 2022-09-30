@@ -5,12 +5,10 @@ kind: Kustomization
 # list of resources to be Applied
 resources:
 - argocd-mgmt-rt-443.yaml
-- gloo-mesh-admin-workspace.yaml
-- gloo-mesh-admin-workspacesettings.yaml
-- gloo-mesh-gateways-workspace.yaml
-- gloo-mesh-gateways-workspacesettings.yaml
 - gloo-mesh-global-workspacesettings.yaml
 - gloo-mesh-mgmt-kubernetescluster.yaml
 - gloo-mesh-mgmt-virtualgateway-443.yaml
+- gloo-mesh-ops-team-workspace.yaml
+- gloo-mesh-ops-team-workspacesettings.yaml
 - gloo-mesh-ui-rt-443.yaml
 - grafana-rt-443.yaml
