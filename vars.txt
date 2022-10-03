@@ -5,7 +5,7 @@
 # rename your context if necessary
 
 LICENSE_KEY=${1:-""}
-environment_overlay=${2:-""} # prod, qa, dev, base
+environment_overlay=${2:-""} # prod, dev, base
 cluster_context=${3:-mgmt}
 github_username=${4:-ably77}
 repo_name=${5:-gloo-mesh-aoa}
