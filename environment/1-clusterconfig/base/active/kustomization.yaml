@@ -14,6 +14,7 @@ resources:
 - httpbin-ns.yaml
 - istio-gateways-ns.yaml
 - istio-system-ns.yaml
+- ops-team-config-ns.yaml
 
 commonLabels:
   istio.io/rev: 1-13
