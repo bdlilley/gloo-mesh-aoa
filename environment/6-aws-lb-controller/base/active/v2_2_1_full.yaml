@@ -798,7 +798,7 @@ spec:
       - args:
         - --cluster-name=your-cluster-name
         - --ingress-class=alb
-        image: amazon/aws-alb-ingress-controller:v2.2.1
+        image: amazon/aws-alb-ingress-controller:v2.4.4
         livenessProbe:
           failureThreshold: 2
           httpGet:
