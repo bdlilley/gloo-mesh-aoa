@@ -838,7 +838,7 @@ spec:
           defaultMode: 420
           secretName: aws-load-balancer-webhook-tls
 ---
-apiVersion: cert-manager.io/v1alpha2
+apiVersion: cert-manager.io/v1
 kind: Certificate
 metadata:
   labels:
@@ -854,7 +854,7 @@ spec:
     name: aws-load-balancer-selfsigned-issuer
   secretName: aws-load-balancer-webhook-tls
 ---
-apiVersion: cert-manager.io/v1alpha2
+apiVersion: cert-manager.io/v1
 kind: Issuer
 metadata:
   labels:
