@@ -13,3 +13,4 @@ resources:
 - gloo-mesh-ui-rt-443.yaml
 - grafana-rt-443.yaml
 - goog-extsvc.yaml
+- httpbin.yaml
