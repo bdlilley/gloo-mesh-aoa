@@ -55,7 +55,7 @@ spec:
         labels:
           istio.io/rev: 1-15
           istio: ingressgateway
-  # syncPolicy:
-  #   automated:
-  #     prune: true
-  #     selfHeal: true
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
