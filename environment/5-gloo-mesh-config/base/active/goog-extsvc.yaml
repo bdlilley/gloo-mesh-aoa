@@ -49,8 +49,8 @@ metadata:
   name: goog-ext-svc
   namespace: gloo-mesh
 spec:
-  # hosts:
-  # - 'jsonplaceholder.typicode.com'
+  hosts:
+  - '*'
   ports:
   - number: 443
     protocol: HTTPS
