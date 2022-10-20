@@ -11,6 +11,8 @@ spec:
   - number: 443
     name: https
     protocol: HTTPS
+    clientsideTls:
+      sni: jsonplaceholder.typicode.com
 ---
 apiVersion: networking.gloo.solo.io/v2
 kind: RouteTable
