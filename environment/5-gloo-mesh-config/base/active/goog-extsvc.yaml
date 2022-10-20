@@ -11,6 +11,36 @@ spec:
   - number: 443
     name: https
     protocol: HTTPS
+---
+apiVersion: networking.gloo.solo.io/v2
+kind: RouteTable
+metadata:
+  labels:
+    expose: "true"
+  name: goog-ext-443
+  namespace: gloo-mesh
+spec:
+  hosts:
+  - 'www.google.com'
+  http:
+  - forwardTo:
+      destinations:
+      - port:
+          number: 443
+        kind: EXTERNAL_SERVICE
+        ref:
+          cluster: mgmt
+          name: goog-ext-svc
+          namespace: gloo-mesh
+    labels:
+      waf: "true"
+    name: goog-ext
+    matchers: []
+  virtualGateways:
+  - cluster: mgmt
+    name: mgmt-north-south-gw-443
+    namespace: istio-gateways
+  workloadSelectors: []
 
 # kind: VirtualDestination
 # apiVersion: networking.gloo.solo.io/v2
