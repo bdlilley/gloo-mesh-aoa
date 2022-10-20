@@ -32,8 +32,6 @@ spec:
           cluster: mgmt
           name: goog-ext-svc
           namespace: gloo-mesh
-    labels:
-      waf: "true"
     name: goog-ext
     matchers: []
   virtualGateways:
