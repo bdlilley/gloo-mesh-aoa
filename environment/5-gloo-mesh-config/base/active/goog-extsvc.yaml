@@ -13,48 +13,48 @@ spec:
     protocol: HTTPS
     clientsideTls:
       sni: jsonplaceholder.typicode.com
-# ---
-# apiVersion: networking.gloo.solo.io/v2
-# kind: RouteTable
-# metadata:
-#   labels:
-#     expose: "true"
-#   name: fake-ext-svc-443
-#   namespace: gloo-mesh
-# spec:
-#   hosts:
-#   - 'jsonplaceholder.typicode.com'
-#   http:
-#   - forwardTo:
-#       destinations:
-#       - port:
-#           number: 443
-#         kind: EXTERNAL_SERVICE
-#         ref:
-#           cluster: mgmt
-#           name: fake-ext-svc
-#           namespace: gloo-mesh
-#     name: fake-ext-svc
-#     matchers: []
-#   virtualGateways:
-#   - cluster: mgmt
-#     name: mgmt-north-south-gw-443
-#     namespace: istio-gateways
-#   workloadSelectors: []
-
 ---
-kind: VirtualDestination
 apiVersion: networking.gloo.solo.io/v2
+kind: RouteTable
 metadata:
-  name: goog-ext-svc
+  labels:
+    expose: "true"
+  name: fake-ext-svc-443
   namespace: gloo-mesh
 spec:
-  # hosts:
-  # - '*'
-  ports:
-  - number: 443
-    protocol: HTTPS
-  externalServices:
-  - name: fake-ext-svc
-    namespace: gloo-mesh
-    cluster: mgmt
+  hosts:
+  - 'jsonplaceholder.typicode.com'
+  http:
+  - forwardTo:
+      destinations:
+      - port:
+          number: 443
+        kind: EXTERNAL_SERVICE
+        ref:
+          cluster: mgmt
+          name: fake-ext-svc
+          namespace: gloo-mesh
+    name: fake-ext-svc
+    matchers: []
+  virtualGateways:
+  - cluster: mgmt
+    name: mgmt-north-south-gw-443
+    namespace: istio-gateways
+  workloadSelectors: []
+
+# ---
+# kind: VirtualDestination
+# apiVersion: networking.gloo.solo.io/v2
+# metadata:
+#   name: goog-ext-svc
+#   namespace: gloo-mesh
+# spec:
+#   # hosts:
+#   # - '*'
+#   ports:
+#   - number: 443
+#     protocol: HTTPS
+#   externalServices:
+#   - name: fake-ext-svc
+#     namespace: gloo-mesh
+#     cluster: mgmt
