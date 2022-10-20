@@ -42,18 +42,18 @@ spec:
 #     namespace: istio-gateways
 #   workloadSelectors: []
 
-# ---
-# kind: VirtualDestination
-# apiVersion: networking.gloo.solo.io/v2
-# metadata:
-#   name: goog-ext-svc
-#   namespace: gloo-mesh
-# spec:
-#   hosts:
-#   - 'jsonplaceholder.typicode.com'
-#   ports:
-#   - number: 443
-#     protocol: HTTPS
-#   externalServices:
-#   - name: fake-ext-svc
-#     namespace: gloo-mesh
+---
+kind: VirtualDestination
+apiVersion: networking.gloo.solo.io/v2
+metadata:
+  name: goog-ext-svc
+  namespace: gloo-mesh
+spec:
+  hosts:
+  - 'jsonplaceholder.typicode.com'
+  ports:
+  - number: 443
+    protocol: HTTPS
+  externalServices:
+  - name: fake-ext-svc
+    namespace: gloo-mesh
