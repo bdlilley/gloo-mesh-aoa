@@ -49,11 +49,12 @@ metadata:
   name: goog-ext-svc
   namespace: gloo-mesh
 spec:
-  hosts:
-  - '*'
+  # hosts:
+  # - '*'
   ports:
   - number: 443
     protocol: HTTPS
   externalServices:
   - name: fake-ext-svc
     namespace: gloo-mesh
+    cluster: mgmt
