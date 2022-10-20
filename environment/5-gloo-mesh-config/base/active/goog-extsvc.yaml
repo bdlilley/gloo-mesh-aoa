@@ -1,0 +1,21 @@
+---
+kind: ExternalService
+apiVersion: networking.gloo.solo.io/v2
+metadata:
+  name: goog-ext-svc
+  namespace: gloo-mesh
+spec:
+  hosts:
+  - "www.google.com"
+  ports:
+  - number: 443
+    name: https
+    protocol: HTTPS
+
+# kind: VirtualDestination
+# apiVersion: networking.gloo.solo.io/v2
+# metadata:
+#   name: goog-ext-svc
+#   namespace: gloo-mesh
+# spec:
+#   externalServices: []
