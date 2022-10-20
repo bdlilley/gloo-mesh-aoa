@@ -2,11 +2,11 @@
 kind: ExternalService
 apiVersion: networking.gloo.solo.io/v2
 metadata:
-  name: goog-ext-svc
+  name: fake-ext-svc
   namespace: gloo-mesh
 spec:
   hosts:
-  - "www.google.com"
+  - "jsonplaceholder.typicode.com"
   ports:
   - number: 443
     name: https
@@ -17,11 +17,11 @@ kind: RouteTable
 metadata:
   labels:
     expose: "true"
-  name: goog-ext-443
+  name: fake-ext-svc-443
   namespace: gloo-mesh
 spec:
   hosts:
-  - 'www.google.com'
+  - 'jsonplaceholder.typicode.com'
   http:
   - forwardTo:
       destinations:
@@ -30,9 +30,9 @@ spec:
         kind: EXTERNAL_SERVICE
         ref:
           cluster: mgmt
-          name: goog-ext-svc
+          name: fake-ext-svc
           namespace: gloo-mesh
-    name: goog-ext
+    name: fake-ext-svc
     matchers: []
   virtualGateways:
   - cluster: mgmt
