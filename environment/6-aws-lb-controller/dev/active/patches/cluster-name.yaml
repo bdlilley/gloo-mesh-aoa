@@ -12,5 +12,5 @@ spec:
       containers:
       - name: controller
         args:
-        - --cluster-name=ben-solo
+        - --cluster-name=pm-bensolo
         - --ingress-class=alb
