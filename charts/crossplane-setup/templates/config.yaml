@@ -13,6 +13,6 @@ kind: Provider
 metadata:
   name: provider-aws
 spec:
-  package: crossplane/provider-aws:{{ .crossplane.version }}
+  package: crossplane/provider-aws:{{ .Values.crossplane.version }}
   controllerConfigRef:
     name: aws-config
