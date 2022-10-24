@@ -42,7 +42,7 @@ spec:
     chart: {{ $chart.chart }}
     {{- end }} #nd if chart.chart
 
-{{- $theValues := .Values.global }}
+{{- $theValues := $root.Values.global }}
 {{- if ($chart).values }}
 {{- $theValues = deepCopy ($chart).values }}
 {{- end }}
