@@ -1,0 +1,16 @@
+# charts - each key is a helm chart install
+charts:
+
+  crossplane:
+    namespace: crossplane-system
+    repo: https://charts.crossplane.io/stable
+    chart: crossplane
+    revision: "1.10.0"
+
+defaults:
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+    - CreateNamespace=true

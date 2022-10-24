@@ -42,5 +42,33 @@ for i in $(ls environment | sort -n); do
   [[ -f "environment/${i}/test.sh" ]] && ./environment/${i}/test.sh
 done
 
+
+echo "starting helm aoa install"
+kubectl --context ${cluster_context} apply -f - <<EOF
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: helm-aoa
+  namespace: argocd
+  finalizers:
+  - resources-finalizer.argocd.argoproj.io
+spec:
+  project: default
+  source:
+    repoURL: https://github.com/${github_username}/${repo_name}/
+    targetRevision: ${target_branch}
+    path: helm-aoa
+    helm:
+      valueFiles:
+      - values.yaml
+      values: ""
+  destination:
+    server: https://kubernetes.default.svc
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+EOF
+
 echo "END."
 
