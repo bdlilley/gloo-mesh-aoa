@@ -1,11 +1,11 @@
 # charts - each key is a helm chart install
-charts:
+# charts:
 
-  crossplane:
-    namespace: crossplane-system
-    repo: https://charts.crossplane.io/stable
-    chart: crossplane
-    revision: "1.10.0"
+  # crossplane:
+  #   namespace: crossplane-system
+  #   repo: https://charts.crossplane.io/stable
+  #   chart: crossplane
+  #   revision: "1.10.0"
 
   # crossplane-setup:
   #   namespace: crossplane-system
