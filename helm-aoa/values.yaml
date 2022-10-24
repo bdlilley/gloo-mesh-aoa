@@ -9,7 +9,7 @@ charts:
 
   crossplane-setup:
     namespace: crossplane-system
-    path: charts/helm-aoa
+    path: charts/crossplane-setup
     syncPolicy:
       syncOptions: [] # dont create namespace
 
