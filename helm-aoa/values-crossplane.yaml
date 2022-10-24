@@ -12,7 +12,7 @@ charts:
     path: charts/crossplane-setup
     values:
       crossplane:
-        version: v0.33.0
+        version: master # v0.32.0
     syncPolicy:
       syncOptions: [] # dont create namespace
 
