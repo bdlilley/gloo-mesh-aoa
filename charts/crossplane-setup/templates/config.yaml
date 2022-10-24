@@ -3,7 +3,7 @@ kind: ControllerConfig
 metadata:
   name: aws-config
   annotations:
-    eks.amazonaws.com/role-arn: arn:aws:iam::123456789876:role/crossplane-{{ .Values.global.cluster.name }}
+    eks.amazonaws.com/role-arn: arn:aws:iam::931713665590:role/crossplane-{{ .Values.global.cluster.name }}
 spec:
   podSecurityContext:
     fsGroup: 2000
