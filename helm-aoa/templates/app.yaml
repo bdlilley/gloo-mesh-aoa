@@ -15,7 +15,7 @@ spec:
     {{- if ($chart).repo }}
     repoURL: {{ $chart.repo }}
     {{- else }}
-    repoURL: https://github.com/bdlilley/gloo-platform-argocd.git
+    repoURL: https://github.com/bdlilley/gloo-mesh-aoa.git
     {{- end }}
     {{- if ($chart).revision }}
     # branch for git-hosted, chart version for helm registry-hosted
