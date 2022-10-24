@@ -9,6 +9,7 @@ charts:
 
   crossplane-setup:
     namespace: crossplane-system
+    repo: https://github.com/bdlilley/gloo-mesh-aoa.git
     path: charts/helm-aoa
     syncPolicy:
       syncOptions: [] # dont create namespace
