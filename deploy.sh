@@ -23,24 +23,24 @@ if [[ ${environment_overlay} == "" ]]
     read environment_overlay
 fi
 
-# install argocd
-cd bootstrap-argocd
-./install-argocd.sh insecure-rootpath ${cluster_context}
-cd ..
+# # install argocd
+# cd bootstrap-argocd
+# ./install-argocd.sh insecure-rootpath ${cluster_context}
+# cd ..
 
-# wait for argo cluster rollout
-./tools/wait-for-rollout.sh deployment argocd-server argocd 20 ${cluster_context}
+# # wait for argo cluster rollout
+# ./tools/wait-for-rollout.sh deployment argocd-server argocd 20 ${cluster_context}
 
-# deploy app of app waves
-for i in $(ls environment | sort -n); do 
-  echo "starting ${i}"
-  # run init script if it exists
-  [[ -f "environment/${i}/init.sh" ]] && ./environment/${i}/init.sh 
-  # deploy aoa wave
-  ./tools/configure-wave.sh ${i} ${environment_overlay} ${cluster_context} ${github_username} ${repo_name} ${target_branch}
-  # run test script if it exists
-  [[ -f "environment/${i}/test.sh" ]] && ./environment/${i}/test.sh
-done
+# # deploy app of app waves
+# for i in $(ls environment | sort -n); do 
+#   echo "starting ${i}"
+#   # run init script if it exists
+#   [[ -f "environment/${i}/init.sh" ]] && ./environment/${i}/init.sh 
+#   # deploy aoa wave
+#   ./tools/configure-wave.sh ${i} ${environment_overlay} ${cluster_context} ${github_username} ${repo_name} ${target_branch}
+#   # run test script if it exists
+#   [[ -f "environment/${i}/test.sh" ]] && ./environment/${i}/test.sh
+# done
 
 
 echo "starting helm aoa install"
