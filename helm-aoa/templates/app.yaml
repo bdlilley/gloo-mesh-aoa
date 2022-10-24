@@ -15,7 +15,7 @@ spec:
     {{- if not ($chart).repo }}
     {{- $chart.repo = "https://github.com/bdlilley/gloo-mesh-aoa.git"}}
     {{- end }}
-    repoURL: https://github.com/bdlilley/gloo-mesh-aoa.git
+    repoURL: {{  $chart.repo }}
     {{- if ($chart).revision }}
     # branch for git-hosted, chart version for helm registry-hosted
     targetRevision: {{ $chart.revision }}
