@@ -7,14 +7,14 @@ charts:
     chart: crossplane
     revision: "1.10.0"
 
-  crossplane-setup:
-    namespace: crossplane-system
-    path: charts/crossplane-setup
-    values:
-      crossplane:
-        version: v0.32.0
-    syncPolicy:
-      syncOptions: [] # dont create namespace
+  # crossplane-setup:
+  #   namespace: crossplane-system
+  #   path: charts/crossplane-setup
+  #   values:
+  #     crossplane:
+  #       version: v0.32.0
+  #   syncPolicy:
+  #     syncOptions: [] # dont create namespace
 
 defaults:
   syncPolicy:
