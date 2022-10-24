@@ -7,6 +7,12 @@ charts:
     chart: crossplane
     revision: "1.10.0"
 
+  crossplane-setup:
+    namespace: crossplane-system
+    path: charts/helm-aoa
+    syncPolicy:
+      syncOptions: [] # dont create namespace
+
 defaults:
   syncPolicy:
     automated:
