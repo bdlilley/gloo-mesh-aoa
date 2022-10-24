@@ -60,7 +60,7 @@ spec:
     path: helm-aoa
     helm:
       valueFiles:
-      - values.yaml
+      - values-crossplane.yaml
       values: |
         global:
           cluster:
