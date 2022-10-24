@@ -10,3 +10,4 @@ cluster_context=${3:-arn:aws:eks:us-east-2:931713665590:cluster/pm-bensolo}
 github_username=${4:-bdlilley}
 repo_name=${5:-gloo-mesh-aoa}
 target_branch=${6:-ben}
+cluster_name=${7:-pm-bensolo}

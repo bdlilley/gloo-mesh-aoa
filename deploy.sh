@@ -61,7 +61,10 @@ spec:
     helm:
       valueFiles:
       - values.yaml
-      values: ""
+      values:
+        global:
+          cluster:
+            name: ${cluster_name}
   destination:
     server: https://kubernetes.default.svc
   syncPolicy:
