@@ -12,7 +12,7 @@ metadata:
 spec:
   project: default
   source:
-    {{- if eq lookup($chart, "repo", "") "" }}
+    {{- if not (contains(keys($chart), "repo")) }}
     {{- merge($chart, {"repo": "https://github.com/bdlilley/gloo-mesh-aoa.git"}) }}
     {{- end }}
     repoURL: {{  $chart.repo }}
