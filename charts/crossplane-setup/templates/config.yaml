@@ -22,6 +22,5 @@ kind: ProviderConfig
 metadata:
   name: default
 spec:
-  useServiceAccount: true
   credentials:
     source: iam
