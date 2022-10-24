@@ -16,3 +16,10 @@ spec:
   package: crossplane/provider-aws:{{ .Values.crossplane.version }}
   controllerConfigRef:
     name: aws-config
+---
+apiVersion: aws.crossplane.io/v1beta1
+kind: ProviderConfig
+metadata:
+  name: default
+spec:
+  useServiceAccount: true 
